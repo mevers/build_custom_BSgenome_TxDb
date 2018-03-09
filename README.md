@@ -33,41 +33,39 @@ You can install CRAN packages with e.g. `install.packages("tidyverse");`, and pa
 1. Clone this respository
 
     ```
-    git clone ....
-
+    git clone https://github.com/mevers/build_custom_BSgenome_TxDb
     ```
 
 2. Change to folder that constains the scripts and config file.
 
     ```
-    cd ...
+    cd build_custom_BSgenome_TxDb
     ```
 
 3. To build the R packages, there are two options.
 
     1. `make_packages.sh` is a convenience bash script that builds both the `BSgenome` and `TxDb` R packages. Run the script with:
-    ```
-    sh make_packages.sh
-    ```
+
+        ```
+        sh make_packages.sh
+        ```
 
     2. You can build the R packages separately; `make_BSgenome_package.R` and `make_TxDb_package.R` are two R command-line scripts that build the `BSgenome` and `TxDb` packages, respectively. Run the scripts with:
-    ```
-    Rscript make_BSgenome_package.R -i config.yaml
-    ```
-    and
-    ```
-    Rscript make_TxDb_package.R -i config.yaml
-    ```
+
+        ```
+        Rscript make_BSgenome_package.R -i config.yaml
+        ```
+
+        and
+
+        ```
+        Rscript make_TxDb_package.R -i config.yaml
+        ```
 
 4. After the packages have been successfully build you should see two files `BSgenome.Hsapiens.mevers.hs1_1.0.0.tar.gz` and `TxDb.Hsapiens.mevers.hs1_1.0.0.tar.gz`. Install both packages in R in the usual way, e.g.
 
     ```
     install.packages("BSgenome.Hsapiens.mevers.hs1_1.0.0.tar.gz");
-    ```
-
-    and
-
-    ```
     install.packages("TxDb.Hsapiens.mevers.hs1_1.0.0.tar.gz");
     ```
 
