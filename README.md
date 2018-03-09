@@ -71,6 +71,7 @@ You can install CRAN packages with e.g. `install.packages("tidyverse");`, and pa
     install.packages("TxDb.Hsapiens.mevers.hs1_1.0.0.tar.gz");
     ```
 
+
 ## How to use the libraries
 
 Both the `BSgenome` and `TxDb` libraries can now be loaded within R.
@@ -122,12 +123,18 @@ gr[seqnames(gr) == "U13369.1"];
 #  seqinfo: 26 sequences (2 circular) from an unspecified genome; no seqlengths
 ```
 
+
 ## References and details
 
 For more details, see e.g.
 * [Efficient genome searching with Biostrings and the BSgenome data packages](https://bioconductor.org/packages/release/bioc/vignettes/BSgenome/inst/doc/GenomeSearching.pdf)
 * [An overview of the Biostrings/BSgenome framework](https://www.bioconductor.org/help/course-materials/2011/BioC2011/LabStuff/BiostringsBSgenomeOverview.pdf)
 * [Making and utilizing TxDb Objects](https://bioconductor.org/packages/devel/bioc/vignettes/GenomicFeatures/inst/doc/GenomicFeatures.pdf)
+
+Ensembl data are based on the
+
+* GRCh38 genome assembly, release 89
+* the GRCh38.89 GTF annotation file.
 
 
 ## Author
