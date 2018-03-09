@@ -1,0 +1,7 @@
+*.tar.gz
+
+BSgenome*/*
+TxDb*/*
+
+seqs/*
+annot/*
