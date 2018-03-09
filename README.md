@@ -73,13 +73,15 @@ You can install CRAN packages with e.g. `install.packages("tidyverse");`, and pa
 
 ## How to use the libraries
 
-Both the `BSgenome` and `TxDb` libraries can now be loaded in your R scripts with
+Both the `BSgenome` and `TxDb` libraries can now be loaded within R.
 
 ```
 library("BSgenome.Hsapiens.mevers.hs1");
 library("TxDb.Hsapiens.mevers.hs1");
 ```
+
 For example, extract all U13369.1 transcripts:
+
 ```
 txdb <- TxDb.Hsapiens.mevers.hs1;
 gr <- transcripts(txdb, columns = c("gene_id", "tx_id", "tx_name"));
@@ -91,7 +93,9 @@ gr[seqnames(gr) == "U13369.1"];
 #  -------
 #  seqinfo: 26 sequences (2 circular) from an unspecified genome; no seqlengths    
 ```
+
 Or extract all U13369.1 "exons":
+
 ```
 gr <- exons(txdb, columns = c("exon_id", "exon_name", "tx_name", "gene_id"));
 gr[seqnames(gr) == "U13369.1"];
