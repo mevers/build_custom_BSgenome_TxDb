@@ -124,6 +124,12 @@ for (i in 1:length(chr)) {
         ".fa.gz");
     fn <- paste0(seqdir, "/", chr[i], ".fa.gz");
     cond_download(url, fn, forceall, "Ensembl sequence");
+    # Check that files are not empty
+    seq <- readDNAStringSet(fn, "fasta");
+    if (length(seq) == 0L) {
+        cat(sprintf("%s [ERROR] File %s seems to be empty.\n", ts(), fn));
+        stop(sprintf("%s is not a FASTA file. Download failure?", fn));
+    }
 }
 
 
