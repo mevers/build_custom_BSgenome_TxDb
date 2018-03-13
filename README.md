@@ -52,6 +52,8 @@ You can install CRAN packages with e.g. `install.packages("tidyverse");`, and pa
         sh make_packages.sh
         ```
 
+        Note that this will only work on Linux/Unix systems.
+
     2. You can build the R packages separately; `make_BSgenome_package.R` and `make_TxDb_package.R` are two R command-line scripts that build the `BSgenome` and `TxDb` packages, respectively. Run the scripts with:
 
         ```
@@ -63,6 +65,8 @@ You can install CRAN packages with e.g. `install.packages("tidyverse");`, and pa
         ```
         Rscript make_TxDb_package.R -i config.yaml
         ```
+
+        On a Windows systems, you might have to call `Rscript` with its full path at the Windows command prompt, e.g. `C:\R-3.4.3\bin\x64\Rscript.exe` (depending on where R is installed).
 
 4. After the packages have been successfully build you should see two files `BSgenome.Hsapiens.mevers.hs1_1.0.0.tar.gz` and `TxDb.Hsapiens.mevers.hs1_1.0.0.tar.gz`. Install both packages in R in the usual way, e.g.
 
