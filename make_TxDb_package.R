@@ -34,12 +34,12 @@ option_list <- list(
         default = NULL,
         help = "YAML config file",
         metavar = "character"),
-    make_option(
-        c("--annotdir"),
-        type = "character",
-        default = "annot",
-        help = "Folder where annotation files are stored [default %default]",
-        metavar = "character"),
+#    make_option(
+#        c("--annotdir"),
+#        type = "character",
+#        default = "annot",
+#        help = "Folder where annotation files are stored [default %default]",
+#        metavar = "character"),
     make_option(
         c("-f", "--forceall"),
         type = "logical",
@@ -82,11 +82,12 @@ cond_download <- function(url, fn, force, id) {
 ## ------------------------------------------------------------------------
 ## Global variables
 input <- args$input;
-annotdir <- args$annotdir;
+#annotdir <- args$annotdir;
+annotdir <- "annot";
 forceall <- args$forceall;
 cat(sprintf("%s Parameter summary\n", ts()));
 cat(sprintf(" input          = %s\n", input));
-cat(sprintf(" annotdir       = %s\n", annotdir));
+#cat(sprintf(" annotdir       = %s\n", annotdir));
 cat(sprintf(" forceall       = %s\n", forceall));
 
 
@@ -95,6 +96,11 @@ cat(sprintf(" forceall       = %s\n", forceall));
 if (!file.exists(input)) {
     stop(
         sprintf("Input file %s does not exists.\n", input),
+        call. = FALSE);
+}
+if (!dir.exists(annotdir)) {
+    stop(
+        sprintf("Folder %s does not exists.\n", annotdir),
         call. = FALSE);
 }
 
@@ -106,10 +112,10 @@ cfg <- read_yaml(input);
 
 ## ------------------------------------------------------------------------
 # Create folders for sequence and annotation files (if necessary)
-if (!dir.exists(annotdir)) {
-    cat(sprintf("%s Creating folder %s\n", ts(), annotdir));
-    dir.create(annotdir);
-}
+#if (!dir.exists(annotdir)) {
+#    cat(sprintf("%s Creating folder %s\n", ts(), annotdir));
+#    dir.create(annotdir);
+#}
 
 
 ## ------------------------------------------------------------------------

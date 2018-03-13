@@ -1,7 +1,37 @@
+# Exclude package tar.gz files
 *.tar.gz
 
+# Exclude package source files
 BSgenome*/*
 TxDb*/*
 
-seqs/*
-annot/*
+# Exclude Ensembl chromosome files
+seqs/1.fa.gz
+seqs/2.fa.gz
+seqs/3.fa.gz
+seqs/4.fa.gz
+seqs/5.fa.gz
+seqs/6.fa.gz
+seqs/7.fa.gz
+seqs/8.fa.gz
+seqs/9.fa.gz
+seqs/10.fa.gz
+seqs/11.fa.gz
+seqs/12.fa.gz
+seqs/13.fa.gz
+seqs/14.fa.gz
+seqs/15.fa.gz
+seqs/16.fa.gz
+seqs/17.fa.gz
+seqs/18.fa.gz
+seqs/19.fa.gz
+seqs/20.fa.gz
+seqs/21.fa.gz
+seqs/22.fa.gz
+seqs/X.fa.gz
+seqs/Y.fa.gz
+seqs/MT.fa.gz
+
+# Exclude Ensembl annotation file
+annot/GRCh*
+annot/Homo_sapiens.GRCh*

@@ -1,0 +1,18 @@
+Package: BSgenome.Hsapiens.mevers.hs1
+Title: Chromosome plus MT plus rDNA sequences for Homo sapiens (based on Ensembl GRCh38)
+Description: Hard-masked chromosome (1-22, X, Y) plus MT plus rDNA (GenBank U13369.1) sequences for Homo sapiens (based on Ensembl GRCh38)
+Version: 1.0.0
+Author: Ensembl+NCBI
+Maintainer: Maurits Evers <maurits.evers@anu.edu.au>
+License: GPL (>= 2)
+organism: Homo sapiens
+common_name: Human
+provider: Ensembl+NCBI
+provider_version: hs1
+release_date: Mar. 2018
+release_name: Human masked chromosome plus MT plus rDNA sequences
+organism_biocview: Homo_sapiens
+BSgenomeObjname: HSapiens
+seqnames: c(seq(1:22), "X", "Y", "MT", "U13369.1")
+circ_seqs: c("MT", "U13369.1")
+seqfiles_suffix: .fa.gz

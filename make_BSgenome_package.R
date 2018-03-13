@@ -33,12 +33,12 @@ option_list <- list(
         default = NULL,
         help = "YAML config file",
         metavar = "character"),
-    make_option(
-        c("--seqdir"),
-        type = "character",
-        default = "seqs",
-        help = "Folder where sequence files are stored [default %default]",
-        metavar = "character"),
+#    make_option(
+#        c("--seqdir"),
+#        type = "character",
+#        default = "seqs",
+#        help = "Folder where sequence files are stored [default %default]",
+#        metavar = "character"),
     make_option(
         c("-f", "--forceall"),
         type = "logical",
@@ -81,11 +81,12 @@ cond_download <- function(url, fn, force, id) {
 ## ------------------------------------------------------------------------
 ## Global variables
 input <- args$input;
-seqdir <- args$seqdir;
+#seqdir <- args$seqdir;
+seqdir <- "seqs";
 forceall <- args$forceall;
 cat(sprintf("%s Parameter summary\n", ts()));
 cat(sprintf(" input          = %s\n", input));
-cat(sprintf(" seqdir         = %s\n", seqdir));
+#cat(sprintf(" seqdir         = %s\n", seqdir));
 cat(sprintf(" forceall       = %s\n", forceall));
 
 
@@ -94,6 +95,11 @@ cat(sprintf(" forceall       = %s\n", forceall));
 if (!file.exists(input)) {
     stop(
         sprintf("Input file %s does not exists.\n", input),
+        call. = FALSE);
+}
+if (!dir.exists(seqdir)) {
+    stop(
+        sprintf("Folder %s does not exists.\n", seqdir),
         call. = FALSE);
 }
 
@@ -105,10 +111,10 @@ cfg <- read_yaml(input);
 
 ## ------------------------------------------------------------------------
 # Create folders for sequence and annotation files (if necessary)
-if (!dir.exists(seqdir)) {
-    cat(sprintf("%s Creating folder %s\n", ts(), seqdir));
-    dir.create(seqdir);
-}
+#if (!dir.exists(seqdir)) {
+#    cat(sprintf("%s Creating folder %s\n", ts(), seqdir));
+#    dir.create(seqdir);
+#}
 
 
 ## ------------------------------------------------------------------------
