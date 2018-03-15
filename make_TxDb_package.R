@@ -130,10 +130,10 @@ cond_download(url, fn1, forceall, "Ensembl annotation")
 
 ## ------------------------------------------------------------------------
 # Download rDNA gtf annotation from Dropbox
-cat(sprintf("%s Downloading rDNA annotation file...\n", ts()));
-url <- "https://www.dropbox.com/s/jnvwo8avkcc12iq/U13369.1.gtf.gz?dl=1";
+#cat(sprintf("%s Downloading rDNA annotation file...\n", ts()));
+#url <- "https://www.dropbox.com/s/jnvwo8avkcc12iq/U13369.1.gtf.gz?dl=1";
 fn2 <- paste0(annotdir, "/U13369.1.gtf.gz");
-cond_download(url, fn2, forceall, "rDNA annotation");
+#cond_download(url, fn2, forceall, "rDNA annotation");
 
 
 ## ------------------------------------------------------------------------

@@ -141,10 +141,10 @@ for (i in 1:length(chr)) {
 
 ## ------------------------------------------------------------------------
 # Download rDNA fa sequence from Dropbox
-cat(sprintf("%s Downloading rDNA sequence file...\n", ts()));
-url <- "https://www.dropbox.com/s/hiwz75voa0up011/U13369.1.fa.gz?dl=1";
+#cat(sprintf("%s Downloading rDNA sequence file...\n", ts()));
+#url <- "https://www.dropbox.com/s/hiwz75voa0up011/U13369.1.fa.gz?dl=1";
 fn <- paste0(seqdir, "/U13369.1.fa.gz");
-cond_download(url, fn, forceall, "rDNA sequence");
+#cond_download(url, fn, forceall, "rDNA sequence");
 
 
 ## ------------------------------------------------------------------------
