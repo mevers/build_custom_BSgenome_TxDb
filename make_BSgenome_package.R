@@ -122,6 +122,10 @@ if (!dir.exists(seqdir)) {
 cfg <- read_yaml(input);
 
 
+## Parse YAML chromosome mapping file
+ensembl2ucsc <- read_yaml("ensembl2ucsc.yaml");
+
+
 ## ------------------------------------------------------------------------
 # Create folders for sequence and annotation files (if necessary)
 #if (!dir.exists(seqdir)) {
