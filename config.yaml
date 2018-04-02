@@ -6,9 +6,10 @@
 #
 # Author: Maurits Evers (maurits.evers@anu.edu.au)
 
-# Download parameters
+# Ensembl download parameters
 download:
     baseurl_ensembl: ftp://ftp.ensembl.org/pub/release-89
+    chr: c(1:22, "X", "Y", "MT")
 
 # Parameters for BSgenome
 BSgenome:
@@ -27,6 +28,8 @@ BSgenome:
     release_name: Human masked chromosome plus MT plus rDNA sequences
     organism_biocview: Homo_sapiens
     BSgenomeObjname: HSapiens
-    seqnames: c(seq(1:22), "X", "Y", "MT", "U13369.1")
-    circ_seqs: c("MT", "U13369.1")
+#    seqnames: c(seq(1:22), "X", "Y", "MT", "U13369.1")
+#    circ_seqs: c("MT", "U13369.1")
+#    seqnames: c(paste0("chr", seq(1:22)), "chrX", "chrY", "chrM", "U13369.1")
+#    circ_seqs: c("chrM", "U13369.1")
     seqfiles_suffix: .fa.gz

@@ -40,11 +40,22 @@ option_list <- list(
 #        help = "Folder where sequence files are stored [default %default]",
 #        metavar = "character"),
     make_option(
+        c("--naming"),
+        type = "character",
+        default = "ensembl",
+        help = "Set chromosome naming reference for BSgenome object;
+                can be either \"ensembl\" or \"ucsc\" (without quotes).
+                Note: ucsc uses chr1, chr2, ..., chrM
+                      ensembl uses 1, 2, ..., MT
+                [default %default]",
+        metavar = "character"),
+    make_option(
         c("-f", "--forceall"),
         type = "logical",
         action = "store_true",
         default = FALSE,
-        help = "Force download (this will overwrite existing files) [default %default]",
+        help = "Force download (this will overwrite existing files)
+                [default %default]",
         metavar = "character")
 );
 opt_parser <- OptionParser(option_list = option_list);
@@ -84,8 +95,10 @@ input <- args$input;
 #seqdir <- args$seqdir;
 seqdir <- "seqs";
 forceall <- args$forceall;
+naming <- args$naming;
 cat(sprintf("%s Parameter summary\n", ts()));
 cat(sprintf(" input          = %s\n", input));
+cat(sprintf(" naming         = %s\n", naming));
 #cat(sprintf(" seqdir         = %s\n", seqdir));
 cat(sprintf(" forceall       = %s\n", forceall));
 
@@ -119,8 +132,7 @@ cfg <- read_yaml(input);
 
 ## ------------------------------------------------------------------------
 # Download genome fa.gz sequences from Ensembl
-chr <- eval(parse(text = cfg$BSgenome$seqnames));
-chr <- chr[chr %in% c(seq(1:22), "MT", "X", "Y")];
+chr <- eval(parse(text = cfg$download$chr));
 cat(sprintf("%s Downloading Ensembl genome sequence files...\n", ts()));
 for (i in 1:length(chr)) {
     url <- paste0(
@@ -136,6 +148,10 @@ for (i in 1:length(chr)) {
         cat(sprintf("%s [ERROR] File %s seems to be empty.\n", ts(), fn));
         stop(sprintf("%s is not a FASTA file. Download failure?", fn));
     }
+    if (naming  == "ucsc") {
+        names(seq) <- gsub("(^\\d+)(.+$)", "chr\\1\\2", names(seq));
+        writeXStringSet()
+    }
 }
 
 
@@ -150,6 +166,19 @@ fn <- paste0(seqdir, "/U13369.1.fa.gz");
 ## ------------------------------------------------------------------------
 # Write seed file (as Debian Control File)
 cat(sprintf("%s Writing seed file...\n", ts()));
+chr <- c(chr, "U13369.1");
+seq.circ <- c("MT", "U13369.1");
+if (naming == "ucsc") {
+    chr <- gsub("((^\\d+$|^X$|^Y$))", "chr\\1", chr);
+    chr <- gsub("MT", "chrM", chr);
+    seq.circ <- gsub("MT", "chrM", seq.circ);
+}
+cfg$BSgenome$seqnames <- sprintf(
+    "c(%s)",
+    paste0(paste0("'", chr, "'"), collapse = ", "));
+cfg$BSgenome$circ_seqs <- sprintf(
+    "c(%s)",
+    paste0(paste0("'", seq.circ, "'"), collapse = ", "))
 write.dcf(
     cfg$BSgenome,
     file = "BSgenome_seed.dcf",
