@@ -6,10 +6,17 @@
 #
 # Author: Maurits Evers (maurits.evers@anu.edu.au)
 
+
+# Sequence parameters
+seq:
+    chr: c(1:22, "X", "Y", "MT")
+    chr_circ: c("MT", "U13369.1")
+
+
 # Ensembl download parameters
 download:
     baseurl_ensembl: ftp://ftp.ensembl.org/pub/release-89
-    chr: c(1:22, "X", "Y", "MT")
+
 
 # Parameters for BSgenome
 BSgenome:
