@@ -136,7 +136,7 @@ ensembl2ucsc <- read_yaml("ensembl2ucsc.yaml");
 
 ## ------------------------------------------------------------------------
 # Download genome fa.gz sequences from Ensembl
-chr <- eval(parse(text = cfg$download$chr));
+chr <- eval(parse(text = cfg$seq$chr));
 cat(sprintf("%s Downloading Ensembl genome sequence files...\n", ts()));
 for (i in 1:length(chr)) {
     url <- paste0(
@@ -181,11 +181,16 @@ fn <- paste0(seqdir, "/U13369.1.fa.gz");
 # Write seed file (as Debian Control File)
 cat(sprintf("%s Writing seed file...\n", ts()));
 chr <- c(chr, "U13369.1");
-seq.circ <- c("MT", "U13369.1");
+seq.circ <- eval(parse(text = cfg$seq$chr_circ));
 if (naming == "ucsc") {
-    chr <- gsub("((^\\d+$|^X$|^Y$))", "chr\\1", chr);
-    chr <- gsub("MT", "chrM", chr);
-    seq.circ <- gsub("MT", "chrM", seq.circ);
+    chr <- ifelse(
+        !is.na(match(chr, names(ensembl2ucsc))),
+        unlist(ensembl2ucsc[chr]),
+        chr);
+    seq.circ <- ifelse(
+            !is.na(match(seq.circ, names(ensembl2ucsc))),
+            unlist(ensembl2ucsc[seq.circ]),
+            seq.circ)
 }
 cfg$BSgenome$seqnames <- sprintf(
     "c(%s)",
