@@ -71,8 +71,8 @@ You can install CRAN packages with e.g. `install.packages("tidyverse");`, and pa
 4. After the packages have been successfully build you should see two files `BSgenome.Hsapiens.mevers.hs1_1.0.0.tar.gz` and `TxDb.Hsapiens.mevers.hs1_1.0.0.tar.gz`. Install both packages in R in the usual way, e.g.
 
     ```
-    install.packages("BSgenome.Hsapiens.mevers.hs1_1.0.0.tar.gz");
-    install.packages("TxDb.Hsapiens.mevers.hs1_1.0.0.tar.gz");
+    install.packages("BSgenome.Hsapiens.mevers.hs1_1.0.0.tar.gz", repos = NULL, type = "source");
+    install.packages("TxDb.Hsapiens.mevers.hs1_1.0.0.tar.gz", repos = NULL, type = "source");
     ```
 
 
