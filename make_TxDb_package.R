@@ -41,6 +41,16 @@ option_list <- list(
 #        help = "Folder where annotation files are stored [default %default]",
 #        metavar = "character"),
     make_option(
+        c("--naming"),
+        type = "character",
+        default = "ensembl",
+        help = "Set chromosome naming reference for BSgenome object;
+                can be either \"ensembl\" or \"ucsc\" (without quotes).
+                Note: ucsc uses chr1, chr2, ..., chrM
+                    ensembl uses 1, 2, ..., MT
+                [default %default]",
+        metavar = "character"),
+    make_option(
         c("-f", "--forceall"),
         type = "logical",
         action = "store_true",
@@ -67,9 +77,9 @@ ts <- function() {
 # Custom function to download file (if condition is met)
 cond_download <- function(url, fn, force, id) {
     if (force | !file.exists(fn)) {
-        download.file(url, fn, quiet = TRUE);
         cat(sprintf(
-            "%s Finished downloading %s file %s.\n", ts(), id, fn));
+            "%s Downloading %s file %s.\n", ts(), id, fn));
+        download.file(url, fn, quiet = TRUE);
     } else {
         cat(sprintf(
             "%s File %s already exists. Skipping (use -f to force download).\n",
@@ -85,8 +95,10 @@ input <- args$input;
 #annotdir <- args$annotdir;
 annotdir <- "annot";
 forceall <- args$forceall;
+naming <- match.arg(tolower(args$naming), c("ensembl", "ucsc"));
 cat(sprintf("%s Parameter summary\n", ts()));
 cat(sprintf(" input          = %s\n", input));
+cat(sprintf(" naming         = %s\n", naming));
 #cat(sprintf(" annotdir       = %s\n", annotdir));
 cat(sprintf(" forceall       = %s\n", forceall));
 
@@ -110,6 +122,10 @@ if (!dir.exists(annotdir)) {
 cfg <- read_yaml(input);
 
 
+## Parse YAML chromosome mapping file
+ensembl2ucsc <- read_yaml("ensembl2ucsc.yaml");
+
+
 ## ------------------------------------------------------------------------
 # Create folders for sequence and annotation files (if necessary)
 #if (!dir.exists(annotdir)) {
@@ -125,7 +141,7 @@ url <- paste0(
     cfg$download$baseurl_ensembl,
     "/gtf/homo_sapiens/Homo_sapiens.GRCh38.89.gtf.gz")
 fn1 <- paste0(annotdir, "/Homo_sapiens.GRCh38.89.gtf.gz");
-cond_download(url, fn1, forceall, "Ensembl annotation")
+cond_download(url, fn1, forceall, "Ensembl annotation");
 
 
 ## ------------------------------------------------------------------------
@@ -158,6 +174,15 @@ if (forceall | !file.exists(fn)) {
     df <- df1 %>%
         filter(X1 %in% c(seq(1:22), "MT", "X", "Y")) %>%
         bind_rows(df2);
+    # Convert Ensembl to UCSC chromosome names if requested
+    if (naming  == "ucsc") {
+        chr <- unlist(ensembl2ucsc);
+        df <- df %>%
+            mutate(X1 = ifelse(
+                !is.na(match(X1, names(chr))),
+                chr[match(X1, names(chr))],
+                X1));
+    }
     cat(sprintf("%s Writing merged annotation files...\n", ts()));
     # Can't use write_delim because it puts double-quotes around character
     # entries, and this causes an error in makeTxDbFromGFF
@@ -174,6 +199,13 @@ if (forceall | !file.exists(fn)) {
 # Make TxDb package
 cat(sprintf("%s Preparing TxDb package...\n", ts()));
 pkgname <- gsub("BSgenome", "TxDb", cfg$BSgenome$Package);
+seq.circ <- eval(parse(text = cfg$seq$chr_circ));
+if (naming == "ucsc") {
+    seq.circ <- ifelse(
+            !is.na(match(seq.circ, names(ensembl2ucsc))),
+            unlist(ensembl2ucsc[seq.circ]),
+            seq.circ)
+}
 if (forceall | !dir.exists(pkgname)) {
     if (forceall & dir.exists(pkgname)) {
         cat(sprintf("%s Deleting existing folder %s...\n",
@@ -191,7 +223,7 @@ if (forceall | !dir.exists(pkgname)) {
         format = "gtf",
         dataSource = cfg$BSgenome$provider,
         organism = cfg$BSgenome$organism,
-        circ_seqs = eval(parse(text = cfg$BSgenome$circ_seqs)),
+        circ_seqs = seq.circ,
         metadata = metadata);
     cat(sprintf(
         "%s Creating package source files in folder %s\n",
