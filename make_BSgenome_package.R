@@ -77,9 +77,9 @@ ts <- function() {
 # Custom function to download file (if condition is met)
 cond_download <- function(url, fn, force, id) {
     if (force | !file.exists(fn)) {
-        download.file(url, fn, quiet = TRUE);
         cat(sprintf(
-            "%s Finished downloading %s file %s.\n", ts(), id, fn));
+            "%s Downloading %s file %s.\n", ts(), id, fn));
+        download.file(url, fn, quiet = TRUE);
     } else {
         cat(sprintf(
             "%s File %s already exists. Skipping (use -f to force download).\n",
@@ -95,7 +95,7 @@ input <- args$input;
 #seqdir <- args$seqdir;
 seqdir <- "seqs";
 forceall <- args$forceall;
-naming <- args$naming;
+naming <- match.arg(tolower(args$naming), c("ensembl", "ucsc"));
 cat(sprintf("%s Parameter summary\n", ts()));
 cat(sprintf(" input          = %s\n", input));
 cat(sprintf(" naming         = %s\n", naming));
@@ -152,9 +152,19 @@ for (i in 1:length(chr)) {
         cat(sprintf("%s [ERROR] File %s seems to be empty.\n", ts(), fn));
         stop(sprintf("%s is not a FASTA file. Download failure?", fn));
     }
+    # Store sequence files in UCSC chromosome notation if requested
     if (naming  == "ucsc") {
-        names(seq) <- gsub("(^\\d+)(.+$)", "chr\\1\\2", names(seq));
-        writeXStringSet()
+        fn.out <- gsub(
+            paste0(chr[i], ".fa.gz"),
+            paste0(ensembl2ucsc[[chr[i]]], ".fa.gz"),
+            fn);
+        if (!file.exists(fn.out)) {
+            names(seq) <- sub(chr[i], ensembl2ucsc[[chr[i]]], names(seq));
+            cat(sprintf(
+                "%s Writing new file %s in UCSC chromosome notation.\n",
+                ts(), fn.out));
+            writeXStringSet(seq, fn.out, compress = TRUE, width = 60);
+        }
     }
 }
 

@@ -32,6 +32,33 @@ seqs/X.fa.gz
 seqs/Y.fa.gz
 seqs/MT.fa.gz
 
+# Exclude UCSC chromosome files
+seqs/chr1.fa.gz
+seqs/chr2.fa.gz
+seqs/chr3.fa.gz
+seqs/chr4.fa.gz
+seqs/chr5.fa.gz
+seqs/chr6.fa.gz
+seqs/chr7.fa.gz
+seqs/chr8.fa.gz
+seqs/chr9.fa.gz
+seqs/chr10.fa.gz
+seqs/chr11.fa.gz
+seqs/chr12.fa.gz
+seqs/chr13.fa.gz
+seqs/chr14.fa.gz
+seqs/chr15.fa.gz
+seqs/chr16.fa.gz
+seqs/chr17.fa.gz
+seqs/chr18.fa.gz
+seqs/chr19.fa.gz
+seqs/chr20.fa.gz
+seqs/chr21.fa.gz
+seqs/chr22.fa.gz
+seqs/chrX.fa.gz
+seqs/chrY.fa.gz
+seqs/chrM.fa.gz
+
 # Exclude Ensembl annotation file
 annot/GRCh*
 annot/Homo_sapiens.GRCh*

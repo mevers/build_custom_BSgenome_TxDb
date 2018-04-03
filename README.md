@@ -85,7 +85,43 @@ library("BSgenome.Hsapiens.mevers.hs1");
 library("TxDb.Hsapiens.mevers.hs1");
 ```
 
-For example, extract all U13369.1 transcripts:
+Get a general genome sequence summary:
+```
+BSgenome.Hsapiens.mevers.hs1;
+#Human genome:
+## organism: Homo sapiens (Human)
+## provider: Ensembl+NCBI
+## provider version: hs1
+## release date: Mar. 2018
+## release name: Human masked chromosome plus MT plus rDNA sequences
+## 26 sequences:
+##   chr1     chr2     chr3     chr4     chr5     chr6     chr7     chr8
+##   chr9     chr10    chr11    chr12    chr13    chr14    chr15    chr16
+##   chr17    chr18    chr19    chr20    chr21    chr22    chrX     chrY
+##   chrM     U13369.1
+## (use 'seqnames()' to see all the sequence names, use the '$' or '[[' operator
+## to access a given sequence)
+```
+
+Extract lengths and features of individual chromosome sequences:
+```
+seqinfo(BSgenome.Hsapiens.mevers.hs1);
+#Seqinfo object with 26 sequences (2 circular) from hs1 genome:
+#  seqnames seqlengths isCircular genome
+#  chr1      248956422      FALSE    hs1
+#  chr2      242193529      FALSE    hs1
+#  chr3      198295559      FALSE    hs1
+#  chr4      190214555      FALSE    hs1
+#  chr5      181538259      FALSE    hs1
+#  ...             ...        ...    ...
+#  chr22      50818468      FALSE    hs1
+#  chrX      156040895      FALSE    hs1
+#  chrY       57227415      FALSE    hs1
+#  chrM          16569       TRUE    hs1
+#  U13369.1      42999       TRUE    hs1
+```
+
+Extract all U13369.1 transcripts:
 
 ```
 txdb <- TxDb.Hsapiens.mevers.hs1;
