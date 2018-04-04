@@ -29,6 +29,7 @@ library(ChIPpeakAnno);
 library(GenomicRanges);
 library(TxDb.Hsapiens.mevers.hs1);
 library(tidyverse);
+library(org.Hs.eg.db);
 ```
 
 
@@ -42,6 +43,7 @@ peaks <- with(peaks, GRanges(seqnames = V1, IRanges(start = V2, end = V3)));
 ```
 
 Link to ENCODE experiment summary:  [https://www.encodeproject.org/experiments/ENCSR000AVC](https://www.encodeproject.org/experiments/ENCSR000AVC/)
+
 
 # Extract gene annotation from `TxDb` object
 
@@ -79,11 +81,12 @@ df %>%
 
 ```
 
+
 # Feature-specific binding site abundances
 
 ```{r plot-peak-abundance}
 # Match seqlevels 
-# If peaks contains features in seqlevels that are not part of txdb,
+# If `peaks` contains features in seqlevels that are not part of txdb,
 # assignChromosomeRegion will throw an error.
 common.seqlevels <- intersect(seqlevels(txdb), seqlevels(peaks));
 peaks <- keepSeqlevels(peaks, common.seqlevels, pruning.mode = "coarse");
@@ -93,7 +96,7 @@ res <- assignChromosomeRegion(
     peaks,
     nucleotideLevel = FALSE,
     precedence = c("Promoters", "fiveUTRs", "threeUTRs", "Exons", "Introns"),
-    TxDb = TxDb.Hsapiens.mevers.hs1)
+    TxDb = TxDb.Hsapiens.mevers.hs1);
 
 # Plot
 res$percentage %>%
@@ -102,5 +105,27 @@ res$percentage %>%
     geom_bar(stat = "identity") + 
     labs(x = "Feature", y = "Percentage") + 
     theme_bw() + 
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(axis.text.x = element_text(angle = 45, hjust = 1));
+```
+
+
+# Annotate peaks
+
+```{r}
+# Annotate peaks with information from the TxDb object
+overlaps.anno <- annotatePeakInBatch(
+    peaks,
+    AnnotationData = annoData,
+    output = "nearestBiDirectionalPromoters",
+    bindingRegion = c(-2000, 500));
+
+# Add additional gene IDs from org.Hs.eg.db
+overlaps.anno <- addGeneIDs(
+    overlaps.anno,
+    "org.Hs.eg.db",
+    IDs2Add = c("symbol", "entrez_id"));
+overlaps.anno;
+
+# Plot
+pie1(table(overlaps.anno$insideFeature));
 ```
