@@ -1,0 +1,64 @@
+---
+title: "Example `ChIPpeakAnno`"
+author: "Maurits Evers"
+output:
+  html_document:
+#    code_folding: hide
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: true
+    theme: united
+    df_print: paged
+    fig_width: 8
+    fig_height: 7
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+
+# Load libraries
+
+```{r load-libraries}
+library(ChIPpeakAnno);
+library(GenomicRanges);
+library(TxDb.Hsapiens.mevers.hs1)
+```
+
+
+# Read ENCODE KDM4A peak data
+
+```{r read-peak-data}
+# Read ENCODE KDM4A sample data
+# https://www.encodeproject.org/experiments/ENCSR000AVC/
+peaks <- read.table("ENCFF205WRX.bed", header = FALSE);
+peaks <- with(peaks, GRanges(seqnames = V1, IRanges(start = V2, end = V3)));
+```
+
+Link to ENCODE experiment summary:  [https://www.encodeproject.org/experiments/ENCSR000AVC](https://www.encodeproject.org/experiments/ENCSR000AVC/)
+
+# Extract gene annotation from `TxDb` object
+
+```{r extract-gene_annotation}
+annoData <- toGRanges(TxDb.Hsapiens.mevers.hs1, feature = "gene")
+```
+
+
+# Meta-gene plot
+
+```{r plot}
+binOverFeature(
+    peaks, 
+    annotationData = annoData,
+    radius = 5000,
+    nbins = 20,
+    FUN = length,
+    errFun = 0,
+    ylab="count",
+    main="Distribution of aggregated peak numbers around TSS")
+```
