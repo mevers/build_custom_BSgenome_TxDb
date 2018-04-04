@@ -11,7 +11,7 @@ output:
     theme: united
     df_print: paged
     fig_width: 8
-    fig_height: 7
+    fig_height: 6
 ---
 
 
@@ -27,7 +27,8 @@ knitr::opts_chunk$set(warning = FALSE)
 ```{r load-libraries}
 library(ChIPpeakAnno);
 library(GenomicRanges);
-library(TxDb.Hsapiens.mevers.hs1)
+library(TxDb.Hsapiens.mevers.hs1);
+library(tidyverse);
 ```
 
 
@@ -45,20 +46,61 @@ Link to ENCODE experiment summary:  [https://www.encodeproject.org/experiments/E
 # Extract gene annotation from `TxDb` object
 
 ```{r extract-gene_annotation}
-annoData <- toGRanges(TxDb.Hsapiens.mevers.hs1, feature = "gene")
+txdb <- TxDb.Hsapiens.mevers.hs1;
+annoData <- toGRanges(txdb, feature = "gene");
 ```
 
 
 # Meta-gene plot
 
-```{r plot}
-binOverFeature(
+```{r calculate-meta-gene, fig.show='hide'}
+# Meta-gene plot by aggregating peaks across genes
+df <- binOverFeature(
     peaks, 
     annotationData = annoData,
     radius = 5000,
-    nbins = 20,
+    nbins = 100,
     FUN = length,
     errFun = 0,
     ylab="count",
-    main="Distribution of aggregated peak numbers around TSS")
+    main="Distribution of aggregated peak numbers around TSS");
+```
+
+```{r plot-meta-gene}
+# Plot
+df %>%
+    as.data.frame() %>%
+    rownames_to_column("distance") %>%
+    mutate(distance = as.numeric(as.character(distance))) %>%
+    ggplot(aes(distance, peaks)) +
+    geom_line() +
+    labs(x = "Distance from TSS", y = "Count") +
+    theme_bw();
+
+```
+
+# Feature-specific binding site abundances
+
+```{r plot-peak-abundance}
+# Match seqlevels 
+# If peaks contains features in seqlevels that are not part of txdb,
+# assignChromosomeRegion will throw an error.
+common.seqlevels <- intersect(seqlevels(txdb), seqlevels(peaks));
+peaks <- keepSeqlevels(peaks, common.seqlevels, pruning.mode = "coarse");
+
+# Summarise peak abundances per genomic feature (exon, intron, etc.)
+res <- assignChromosomeRegion(
+    peaks,
+    nucleotideLevel = FALSE,
+    precedence = c("Promoters", "fiveUTRs", "threeUTRs", "Exons", "Introns"),
+    TxDb = TxDb.Hsapiens.mevers.hs1)
+
+# Plot
+res$percentage %>%
+    as.data.frame() %>%
+    ggplot(aes(subjectHits, Freq)) + 
+    geom_bar(stat = "identity") + 
+    labs(x = "Feature", y = "Percentage") + 
+    theme_bw() + 
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
